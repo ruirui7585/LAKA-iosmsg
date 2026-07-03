@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)file:///Users/shilv/Downloads/html-preview%20(2).html -->
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laka Connection Request Flow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <aside class="test-panel">
+    <div class="panel-label">PM TEST PANEL</div>
+    <div class="panel-title">Connection Request Flow</div>
+    <div class="panel-desc">
+      顶部 Tab 代表当前测试场景；下方状态机只展示当前场景对应的验收按钮。
+    </div>
+
+    <div class="switcher">
+      <button class="active" data-page="home" onclick="showPage('home')">For You</button>
+      <button data-page="profile" onclick="showPage('profile')">Profile</button>
+      <button data-page="im" onclick="showPage('im')">IM</button>
+    </div>
+
+    <!-- 等级切换 Tab -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;color:#8a8093;font-weight:700;margin-bottom:6px">当前用户等级</div>
+      <div class="level-switcher">
+        <button class="level-btn active" data-level="s" onclick="switchLevel('s')">S 级</button>
+        <button class="level-btn" data-level="a" onclick="switchLevel('a')">A 级</button>
+        <button class="level-btn" data-level="b" onclick="switchLevel('b')">B 级</button>
+        <button class="level-btn" data-level="c" onclick="switchLevel('c')">C 级</button>
+        <button class="level-btn" data-level="d" onclick="switchLevel('d')">D 级</button>
+      </div>
+    </div>
+
+    <div class="machine-area">
+      <div class="machine-scene active" id="homeMachine">
+        <div class="machine-block">
+          <h3>图1 For You 请求状态机</h3>
+          <p>模拟从列表页点击 Hi 后，对方在接收端的处理结果。</p>
+          <div class="machine-actions">
+            <button class="accept" onclick="resolveHi('home','accept')">对方 Accept</button>
+            <button class="reject" onclick="resolveHi('home','reject')">对方 Reject</button>
+            <button class="block" onclick="resolveHi('home','block')">对方 Block</button>
+            <button class="reject" onclick="resetHi('home')">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="machine-scene" id="profileMachine">
+        <div class="machine-block">
+          <h3>图2 Profile 请求状态机</h3>
+          <p>模拟从个人资料页点击 Say Hi 后，对方在接收端的处理结果。</p>
+          <div class="machine-actions">
+            <button class="accept" onclick="resolveHi('profile','accept')">对方 Accept</button>
+            <button class="reject" onclick="resolveHi('profile','reject')">对方 Reject</button>
+            <button class="block" onclick="resolveHi('profile','block')">对方 Block</button>
+            <button class="reject" onclick="resetHi('profile')">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="machine-scene" id="imMachine">
+        <div class="machine-block">
+          <h3>IM 接收方状态机</h3>
+          <p>模拟接收方进入 message request 后，对请求进行 Block / Delete / Accept。</p>
+          <div class="machine-actions">
+            <button class="accept" onclick="setImState('accepted')">Accept</button>
+            <button class="reject" onclick="setImState('deleted')">Delete</button>
+            <button class="block" onclick="setImState('blocked')">Block</button>
+            <button class="reject" onclick="resetImState()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-log" id="statusLog"><b>For You 场景:</b><br>当前测试列表页点击 Hi 后的请求链路。点击 Hi 后只 toast：已向对方发起请求。</div>
+  </aside>
+
+  <main class="phone">
+    <div class="toast" id="toast">IM 请求已 Delete</div>
+
+    <section class="screen home-screen active" id="homeScreen">
+      <div class="status-bar">
+        <div>10:51 ︎</div>
+        <div class="status-icons">
+          <div class="signal"><span></span><span></span><span></span><span></span></div>
+          <div class="wifi">⌁</div>
+          <div class="battery">79</div>
+        </div>
+      </div>
+
+      <header class="home-header">
+        <div class="home-title">For You</div>
+        <div class="trophy">🏆</div>
+      </header>
+
+      <div class="user-list">
+        <div class="user-card">
+          <div class="online-dot"></div>
+          <div class="avatar-cartoon"><img src="avatar_male.png" alt=""></div>
+          <div>
+            <div class="user-name">11n-x <span class="flag">🇮🇶</span></div>
+            <div class="age">♂ 18</div>
+          </div>
+          <div class="hi-bubble" onclick="sendHi('home','11n-x')">Hi</div>
+        </div>
+
+        <div class="user-card">
+          <div class="online-dot"></div>
+          <div class="avatar-photo"><img src="avatar_male.png" alt=""></div>
+          <div>
+            <div class="user-name">الخواجة واحد بس 😎 <span class="flag">🇪🇬</span></div>
+            <div class="age">♂ 20</div>
+          </div>
+          <div class="hi-bubble" onclick="sendHi('home','الخواجة')">Hi</div>
+        </div>
+
+        <div class="user-card">
+          <div class="online-dot"></div>
+          <div class="avatar-cartoon"><img src="avatar_male.png" alt=""></div>
+          <div>
+            <div class="user-name">KhaledFawzy <span class="flag">🇪🇬</span></div>
+            <div class="age">♂ 27</div>
+          </div>
+          <div class="hi-bubble" onclick="sendHi('home','KhaledFawzy')">Hi</div>
+        </div>
+
+        <div class="user-card">
+          <div class="online-dot"></div>
+          <div class="avatar-shadow"><img src="avatar_male.png" alt=""></div>
+          <div>
+            <div class="user-name">love <span class="flag">🇸🇦</span></div>
+            <div class="age">♂ 26</div>
+            <div class="bio-small">مرحبا انا من السعودية 🇸🇦</div>
+          </div>
+          <div class="hi-bubble" onclick="sendHi('home','love')">Hi</div>
+        </div>
+
+        <div class="user-card">
+          <div class="online-dot"></div>
+          <div class="avatar-cartoon"><img src="avatar_male.png" alt=""></div>
+          <div>
+            <div class="user-name">Mohamed <span class="flag">🇪🇬</span></div>
+            <div class="age">♂ 27</div>
+          </div>
+          <div class="hi-bubble" onclick="sendHi('home','Mohamed')">Hi</div>
+        </div>
+
+        <div class="user-card">
+          <div class="online-dot"></div>
+          <div class="avatar-cartoon"><img src="avatar_male.png" alt=""></div>
+          <div>
+            <div class="user-name">علي علي <span class="flag">🇱🇾</span></div>
+            <div class="age">♂ 26</div>
+          </div>
+          <div class="hi-bubble" onclick="sendHi('home','Ali')">Hi</div>
+        </div>
+      </div>
+
+      <div class="calendar-float">🗓️</div>
+
+      <nav class="home-tabbar">
+        <div class="tab-item active"><div class="tab-icon">💙</div>Home</div>
+        <div class="tab-item"><div class="tab-icon">◒</div>Moment</div>
+        <div class="tab-item"><div class="tab-icon">⌂</div>Party</div>
+        <div class="tab-item"><div class="tab-icon">▢</div><span class="badge">21</span>Message</div>
+        <div class="tab-item"><div class="tab-icon">☻</div>Mine</div>
+      </nav>
+    </section>
+
+    <section class="screen profile-screen" id="profileScreen">
+      <div class="profile-hero">
+        <div class="hero-shadow"></div>
+
+        <div class="status-bar">
+          <div>10:53 ︎</div>
+          <div class="status-icons">
+            <div class="signal"><span></span><span></span><span></span><span></span></div>
+            <div class="wifi">⌁</div>
+            <div class="battery">80</div>
+          </div>
+        </div>
+
+        <div class="hero-btn hero-back">←</div>
+        <div class="hero-btn hero-more">•••</div>
+        <div class="hero-avatar"><img src="avatar_male.png" alt=""></div>
+
+        <div class="hero-info">
+          <div class="hero-name">
+            love
+            <span class="flag">🇸🇦</span>
+            <span class="video-badge" id="videoBadge" onclick="showVideoTooltip()">
+              <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="#c084fc" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6l5-3v11l-5-3"/><rect x="2" y="5" width="11" height="10" rx="1.8"/></svg>
+              <span class="video-tooltip" id="videoTooltip">Video Call Supported</span>
+            </span>
+            <span class="online-pill">1 minutes ago online</span>
+          </div>
+          <div class="id-row">ID: 48498026 ⧉</div>
+          <div class="age">♂ 26</div>
+        </div>
+
+        <div class="thumbs">
+          <div class="thumb"></div><div class="thumb active"></div><div class="thumb white"></div>
+          <div class="thumb"></div><div class="thumb"></div><div class="thumb"></div>
+          <div class="thumb"></div><div class="thumb"></div><div class="thumb"></div>
+        </div>
+      </div>
+
+      <div class="profile-sheet">
+        <div class="profile-tabs">
+          <div class="active">Profile</div>
+          <div>Relation</div>
+          <div>Moment</div>
+        </div>
+
+        <h3 class="section-title">Bio</h3>
+        <div class="bio-text">مرحبا انا من السعودية 🇸🇦</div>
+
+        <div class="gift-row">
+          <h3 class="section-title" style="margin:0">Gift gallery</h3>
+          <div>0 ›</div>
+        </div>
+        <div class="gift-empty">▱ No gifts available for now.</div>
+
+        <h3 class="section-title">Tag</h3>
+        <div class="tags">
+          <div class="tag">🤡Funny</div>
+          <div class="tag">✈Travel</div>
+          <div class="tag">😁Always Happy</div>
+          <div class="tag">⚽ Football</div>
+          <div class="tag">💕 Make Friend</div>
+        </div>
+
+        <h3 class="section-title">Basic information</h3>
+        <div class="joined">⚑ Joined 28 minutes ago</div>
+      </div>
+
+      <div class="profile-bottom">
+        <div class="round-action">⚭</div>
+        <div class="round-action">♔</div>
+        <div class="round-action">•••</div>
+        <div class="say-hi" onclick="sendHi('profile','love')"><span>💗</span> Say Hi</div>
+      </div>
+    </section>
+
+    <section class="screen im-screen" id="imScreen">
+      <div class="status-bar">
+        <div>15:54 ︎</div>
+        <div class="status-icons">
+          <div class="signal"><span></span><span></span><span></span><span></span></div>
+          <div class="battery">82</div>
+        </div>
+      </div>
+
+      <header class="chat-header">
+        <div class="round-btn">←</div>
+        <div class="profile-title">
+          <div class="mini-avatar"><img src="avatar_male.png" alt=""></div>
+          <span id="imName">Amar</span>
+        </div>
+        <div class="round-btn">•••</div>
+      </header>
+
+      <section class="request-info">
+        <div class="request-title" id="requestTitle">Message request deleted</div>
+        <div class="request-desc" id="requestDesc">The sender side remains silent.</div>
+      </section>
+
+      <section class="reward-card">
+        <div class="reward-left">
+          <span class="diamond">0💎</span>
+          You get<br>He sent <b>0</b>
+        </div>
+        <div>
+          <div class="reward-title">Reply in 2 min to get all~</div>
+          <div class="reward-track"><span>44</span><span>198</span><span>440</span><span>1100</span><span>1980</span><span>3080</span></div>
+          <div class="reward-num"><span>1</span><span>3</span><span>5</span><span>10</span><span>15</span><span>20</span></div>
+        </div>
+        <div style="color:#b943f5;font-size:13px;font-weight:700">detail</div>
+      </section>
+
+      <section class="im-profile-card">
+        <div class="user-name" id="imCardName">Amar <span class="flag">🇮🇶</span></div>
+        <div class="age">♂ 18</div>
+      </section>
+
+      <div class="im-date">Jun 26, 11:01</div>
+      <div class="system-tip" id="systemTip">This request has been removed.</div>
+      <div class="message-bubble" id="messageBubble" style="display: none;">Hi, I just sent you a request 😊</div>
+
+      <section class="bottom-panel">
+        <div class="panel-section" id="pendingPanel">
+          <div class="action-copy">This user wants to start a chat with you. Choose how to handle this request.</div>
+          <div class="action-tabs">
+            <button class="action-btn block" onclick="setImState('blocked')">Block</button>
+            <button class="action-btn delete" onclick="setImState('deleted')">Delete</button>
+            <button class="action-btn accept" onclick="setImState('accepted')">Accept</button>
+          </div>
+        </div>
+
+        <div class="panel-section" id="blockedPanel">
+          <div class="state-center">
+            <div class="state-icon">🚫</div>
+            <b>Request blocked</b>
+            <p style="color:#8c8194;font-size:12px">The sender will not receive a direct rejection notice.</p>
+          </div>
+        </div>
+
+        <div class="panel-section active" id="deletedPanel">
+          <div class="state-center">
+            <div class="state-icon">✕</div>
+            <b>Message request deleted</b>
+            <p style="color:#8c8194;font-size:12px">The sender side remains silent.</p>
+          </div>
+        </div>
+
+        <div class="panel-section" id="acceptedPanel">
+          <div class="chat-input-section">
+            <div class="quick-replies">
+              <div class="quick">...ببساطتك ه</div>
+              <div class="quick">...أحب دقة م</div>
+              <div class="quick">...مساء الخير</div>
+            </div>
+            <div class="input-row">
+              <div class="input">Say something...</div>
+              <button class="send">➤</button>
+            </div>
+            <div class="chat-toolbar">
+              <!-- 相册 -->
+              <button class="tb-btn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
+              <!-- 上锁话筒 -->
+              <button class="tb-btn"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="17" x2="12" y2="21"/><rect x="9" y="15" width="6" height="5" rx="1.2"/><path d="M11 15v-1.5a1 1 0 012 0V15" fill="none"/><circle cx="12" cy="17.8" r="0.8"/></svg></button>
+              <!-- 礼物(橙色) -->
+              <button class="tb-btn tb-gift"><svg viewBox="0 0 24 24"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7h4.5a2.5 2.5 0 000-5c-1.6 0-3 1.8-4.5 5z"/><path d="M12 7H7.5A2.5 2.5 0 017.5 2C9.1 2 10.5 3.8 12 7z"/></svg></button>
+              <!-- 表情 -->
+              <button class="tb-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg></button>
+              <!-- 上锁视频 -->
+              <button class="tb-btn" id="videoCallBtn" onclick="handleVideoCall()"><svg viewBox="0 0 24 24"><path d="M15 8l5-3v10l-5-3"/><rect x="3" y="6" width="13" height="10" rx="2"/><rect x="9" y="14.5" width="5" height="4" rx="1"/><path d="M10.8 14.5v-1.2a.7 .7 0 011.4 0v1.2" fill="none"/><circle cx="11.5" cy="16.8" r="0.65"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
