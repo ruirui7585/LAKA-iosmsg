@@ -339,6 +339,21 @@ function switchImPanel(id) {
 
 // ========== 设置 IM 状态 ==========
 function setImState(state) {
+  if (state === 'pending') {
+    // 发送第1条消息：发起方视角，底部显示正常可输入的输入框
+    switchImPanel('senderWaitingPanel');
+    document.getElementById('requestTitle').textContent = 'Message request sent';
+    document.getElementById('requestDesc').textContent = 'Your message has been sent. Wait for a response.';
+    document.getElementById('systemTip').textContent = 'You can send the first message below.';
+    document.getElementById('messageBubble').style.display = 'none';
+    document.getElementById('messageHint').style.display = 'none';
+    statusLog.innerHTML =
+      '<b>IM → 发送第1条消息:</b><br/>' +
+      '发起方视角，底部输入框可正常使用，输入文本后点击发送。';
+    showToast('已切换到发送第1条消息');
+    return;
+  }
+
   if (state === 'reject') {
     switchImPanel('rejectedPanel');
     document.getElementById('requestTitle').textContent = 'Message request rejected';
@@ -450,6 +465,20 @@ function sendSenderMessage() {
   const msg = input.textContent.trim();
   if (!msg || msg === 'Say something...') return;
 
+  // 在对话框中显示发送的消息
+  const bubble = document.getElementById('messageBubble');
+  if (bubble) {
+    bubble.textContent = msg;
+    bubble.style.display = 'block';
+  }
+
+  // 显示灰色提示
+  const hint = document.getElementById('messageHint');
+  if (hint) {
+    hint.textContent = 'Message request sent.';
+    hint.style.display = 'block';
+  }
+
   // 清空输入框
   input.textContent = 'Say something...';
 
@@ -457,7 +486,7 @@ function sendSenderMessage() {
   statusLog.innerHTML =
     '<b>发送方 → Reply:</b><br/>' +
     '发起方已发送消息："' + msg + '"<br/>' +
-    '等待对方回复。';
+    '消息显示在对话框中，下方提示：Message request sent.';
 }
 
 // ========== Accept 后输入框发送消息 ==========
