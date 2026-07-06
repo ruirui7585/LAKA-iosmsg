@@ -22,8 +22,17 @@
       <button data-page="im" onclick="showPage('im')">IM</button>
     </div>
 
+    <!-- 用户类型切换 -->
+    <div style="margin-bottom:14px" id="userTypeSection">
+      <div style="font-size:12px;color:#8a8093;font-weight:700;margin-bottom:6px">用户类型</div>
+      <div class="type-switcher">
+        <button class="type-btn active" data-type="receiver" onclick="switchUserType('receiver')" id="receiverBtn">接收方</button>
+        <button class="type-btn" data-type="sender" onclick="switchUserType('sender')" id="senderBtn">发起方</button>
+      </div>
+    </div>
+
     <!-- 等级切换 Tab -->
-    <div style="margin-bottom:14px">
+    <div style="margin-bottom:14px" id="levelSection">
       <div style="font-size:12px;color:#8a8093;font-weight:700;margin-bottom:6px">当前用户等级</div>
       <div class="level-switcher">
         <button class="level-btn active" data-level="s" onclick="switchLevel('s')">S 级</button>
@@ -50,13 +59,13 @@
 
       <div class="machine-scene" id="profileMachine">
         <div class="machine-block">
-          <h3>图2 Profile 请求状态机</h3>
-          <p>模拟从个人资料页点击 Say Hi 后，对方在接收端的处理结果。</p>
+          <h3>Profile 打招呼状态机</h3>
+          <p>模拟 Profile 页面打招呼的 3 种状态。</p>
           <div class="machine-actions">
-            <button class="accept" onclick="resolveHi('profile','accept')">对方 Accept</button>
-            <button class="reject" onclick="resolveHi('profile','reject')">对方 Reject</button>
-            <button class="block" onclick="resolveHi('profile','block')">对方 Block</button>
-            <button class="reject" onclick="resetHi('profile')">Reset</button>
+            <button class="accept" onclick="setProfileSendState('first')">首次发送</button>
+            <button class="accept" onclick="setProfileSendState('7day')">7天后发送</button>
+            <button class="block" onclick="setProfileSendState('cooldown')">冷却中</button>
+            <button class="reject" onclick="resetProfileSendState()">Reset</button>
           </div>
         </div>
       </div>
@@ -64,11 +73,10 @@
       <div class="machine-scene" id="imMachine">
         <div class="machine-block">
           <h3>IM 接收方状态机</h3>
-          <p>模拟接收方进入 message request 后，对请求进行 Block / Delete / Accept。</p>
+          <p>模拟接收方在 message request 状态下的两种子状态。</p>
           <div class="machine-actions">
-            <button class="accept" onclick="setImState('accepted')">Accept</button>
-            <button class="reject" onclick="setImState('deleted')">Delete</button>
-            <button class="block" onclick="setImState('blocked')">Block</button>
+            <button class="accept" onclick="setImState('pending')">发送第1条消息</button>
+            <button class="block" onclick="setImState('inputDisabled')">输入框置灰</button>
             <button class="reject" onclick="resetImState()">Reset</button>
           </div>
         </div>
@@ -97,37 +105,34 @@
       </header>
 
       <div class="user-list">
-        <div class="user-card">
+        <div class="user-card" onclick="showPage('profile')">
           <div class="online-dot"></div>
           <div class="avatar-cartoon"><img src="avatar_male.png" alt=""></div>
           <div>
             <div class="user-name">11n-x <span class="flag">🇮🇶</span></div>
             <div class="age">♂ 18</div>
           </div>
-          <div class="hi-bubble" onclick="sendHi('home','11n-x')">Hi</div>
         </div>
 
-        <div class="user-card">
+        <div class="user-card" onclick="showPage('profile')">
           <div class="online-dot"></div>
           <div class="avatar-photo"><img src="avatar_male.png" alt=""></div>
           <div>
             <div class="user-name">الخواجة واحد بس 😎 <span class="flag">🇪🇬</span></div>
             <div class="age">♂ 20</div>
           </div>
-          <div class="hi-bubble" onclick="sendHi('home','الخواجة')">Hi</div>
         </div>
 
-        <div class="user-card">
+        <div class="user-card" onclick="showPage('profile')">
           <div class="online-dot"></div>
           <div class="avatar-cartoon"><img src="avatar_male.png" alt=""></div>
           <div>
             <div class="user-name">KhaledFawzy <span class="flag">🇪🇬</span></div>
             <div class="age">♂ 27</div>
           </div>
-          <div class="hi-bubble" onclick="sendHi('home','KhaledFawzy')">Hi</div>
         </div>
 
-        <div class="user-card">
+        <div class="user-card" onclick="showPage('profile')">
           <div class="online-dot"></div>
           <div class="avatar-shadow"><img src="avatar_male.png" alt=""></div>
           <div>
@@ -135,27 +140,24 @@
             <div class="age">♂ 26</div>
             <div class="bio-small">مرحبا انا من السعودية 🇸🇦</div>
           </div>
-          <div class="hi-bubble" onclick="sendHi('home','love')">Hi</div>
         </div>
 
-        <div class="user-card">
+        <div class="user-card" onclick="showPage('profile')">
           <div class="online-dot"></div>
           <div class="avatar-cartoon"><img src="avatar_male.png" alt=""></div>
           <div>
             <div class="user-name">Mohamed <span class="flag">🇪🇬</span></div>
             <div class="age">♂ 27</div>
           </div>
-          <div class="hi-bubble" onclick="sendHi('home','Mohamed')">Hi</div>
         </div>
 
-        <div class="user-card">
+        <div class="user-card" onclick="showPage('profile')">
           <div class="online-dot"></div>
           <div class="avatar-cartoon"><img src="avatar_male.png" alt=""></div>
           <div>
             <div class="user-name">علي علي <span class="flag">🇱🇾</span></div>
             <div class="age">♂ 26</div>
           </div>
-          <div class="hi-bubble" onclick="sendHi('home','Ali')">Hi</div>
         </div>
       </div>
 
@@ -241,7 +243,7 @@
         <div class="round-action">⚭</div>
         <div class="round-action">♔</div>
         <div class="round-action">•••</div>
-        <div class="say-hi" onclick="sendHi('profile','love')"><span>💗</span> Say Hi</div>
+        <div class="say-hi" onclick="sendHi('profile','love')">👋</div>
       </div>
     </section>
 
@@ -289,11 +291,31 @@
       <div class="im-date">Jun 26, 11:01</div>
       <div class="system-tip" id="systemTip">This request has been removed.</div>
       <div class="message-bubble" id="messageBubble" style="display: none;">Hi, I just sent you a request 😊</div>
+      <div class="message-hint" id="messageHint" style="display: none;"></div>
 
       <section class="bottom-panel">
         <div class="panel-section" id="pendingPanel">
-          <div class="action-copy">This user wants to start a chat with you. Choose how to handle this request.</div>
-          <div class="action-tabs">
+          <div class="action-copy"><b>Once accepted, you can both start chatting.</b></div>
+          <div class="action-tabs receiver-actions">
+            <button class="action-btn block" onclick="setImState('blocked')">Block</button>
+            <button class="action-btn delete" onclick="setImState('deleted')">Delete</button>
+            <button class="action-btn accept" onclick="setImState('accepted')">Accept</button>
+          </div>
+        </div>
+
+        <!-- 输入框置灰面板 -->
+        <div class="panel-section" id="inputDisabledPanel">
+          <div class="action-copy">Wait for them to accept your request before you can chat.</div>
+
+          <!-- 置灰输入框（不可输入） -->
+          <div class="pending-input-area">
+            <div class="input-row pending-input-row">
+              <div class="input input-disabled" contenteditable="false" id="disabledInput">Input disabled...</div>
+              <button class="send send-disabled" disabled>➤</button>
+            </div>
+          </div>
+
+          <div class="action-tabs receiver-actions">
             <button class="action-btn block" onclick="setImState('blocked')">Block</button>
             <button class="action-btn delete" onclick="setImState('deleted')">Delete</button>
             <button class="action-btn accept" onclick="setImState('accepted')">Accept</button>
@@ -316,28 +338,41 @@
           </div>
         </div>
 
+        <div class="panel-section" id="rejectedPanel">
+          <div class="state-center">
+            <div class="state-icon">✕</div>
+            <b>Message request rejected</b>
+            <p style="color:#8c8194;font-size:12px">The sender will be notified that you declined the request.</p>
+          </div>
+        </div>
+
         <div class="panel-section" id="acceptedPanel">
-          <div class="chat-input-section">
-            <div class="quick-replies">
-              <div class="quick">...ببساطتك ه</div>
-              <div class="quick">...أحب دقة م</div>
-              <div class="quick">...مساء الخير</div>
+          <!-- Accept 后只保留输入框 -->
+          <div class="pending-input-area">
+            <div class="input-row pending-input-row">
+              <div class="input" contenteditable="true" id="acceptedInput" onfocus="if(this.textContent==='Say something...')this.textContent=''" onblur="if(this.textContent==='')this.textContent='Say something...'">Say something...</div>
+              <button class="send" onclick="sendAcceptedMessage()">➤</button>
             </div>
-            <div class="input-row">
-              <div class="input">Say something...</div>
-              <button class="send">➤</button>
+          </div>
+        </div>
+
+        <!-- 发起方等待面板 -->
+        <div class="panel-section" id="senderWaitingPanel">
+          <!-- 发起方输入框状态 -->
+          <div class="pending-input-area">
+            <div class="input-row pending-input-row">
+              <div class="input" contenteditable="true" id="senderInput" onfocus="if(this.textContent==='Say something...')this.textContent=''" onblur="if(this.textContent==='')this.textContent='Say something...'">Say something...</div>
+              <button class="send" onclick="sendSenderMessage()">➤</button>
             </div>
-            <div class="chat-toolbar">
-              <!-- 相册 -->
-              <button class="tb-btn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
-              <!-- 上锁话筒 -->
-              <button class="tb-btn"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="17" x2="12" y2="21"/><rect x="9" y="15" width="6" height="5" rx="1.2"/><path d="M11 15v-1.5a1 1 0 012 0V15" fill="none"/><circle cx="12" cy="17.8" r="0.8"/></svg></button>
-              <!-- 礼物(橙色) -->
-              <button class="tb-btn tb-gift"><svg viewBox="0 0 24 24"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7h4.5a2.5 2.5 0 000-5c-1.6 0-3 1.8-4.5 5z"/><path d="M12 7H7.5A2.5 2.5 0 017.5 2C9.1 2 10.5 3.8 12 7z"/></svg></button>
-              <!-- 表情 -->
-              <button class="tb-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg></button>
-              <!-- 上锁视频 -->
-              <button class="tb-btn" id="videoCallBtn" onclick="handleVideoCall()"><svg viewBox="0 0 24 24"><path d="M15 8l5-3v10l-5-3"/><rect x="3" y="6" width="13" height="10" rx="2"/><rect x="9" y="14.5" width="5" height="4" rx="1"/><path d="M10.8 14.5v-1.2a.7 .7 0 011.4 0v1.2" fill="none"/><circle cx="11.5" cy="16.8" r="0.65"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Profile 首次/7天后发送面板：自动发送消息后展示，只保留输入框 -->
+        <div class="panel-section" id="profileAutoSentPanel">
+          <div class="pending-input-area">
+            <div class="input-row pending-input-row">
+              <div class="input" contenteditable="true" id="profileAutoSentInput" onfocus="if(this.textContent==='Say something...')this.textContent=''" onblur="if(this.textContent==='')this.textContent='Say something...'">Say something...</div>
+              <button class="send" onclick="sendProfileAutoSentMessage()">➤</button>
             </div>
           </div>
         </div>
